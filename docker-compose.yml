@@ -1,0 +1,50 @@
+version: "2.2"
+services:
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:6.0.0
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    container_name: elasticsearch
+    environment:
+      - "ES_JAVA_OPTS=-Xms1024g -Xmx1024g"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+        - ./elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+    networks:
+      - esnet
+  logstash:
+    image: docker.elastic.co/logstash/logstash:6.0.0
+    container_name: logstash
+    volumes:
+      - ./logstash.yml:/usr/share/logstash/config/logstash.yml
+      - ./logstash.conf:/usr/share/logstash/pipeline/logstash.conf
+    ports:
+      - "5044:5044"
+    networks:
+      - esnet
+  filebeat:
+    image: docker.elastic.co/beats/filebeat:6.0.0
+    container_name: filebeat
+    volumes:
+      - ./filebeat.yml:/usr/share/filebeat/filebeat.yml
+    networks:
+      - esnet
+    depends_on:
+      - "elasticsearch"
+  kibana:
+    image: docker.elastic.co/kibana/kibana:6.0.0
+    container_name: kibana
+    ports:
+      - "5601:5601"
+    volumes:
+      - ./kibana.yml:/usr/share/kibana/config/kibana.yml
+    networks:
+      - esnet
+    depends_on:
+      - "elasticsearch"
+networks:
+  esnet:

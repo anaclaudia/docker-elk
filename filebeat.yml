@@ -1,0 +1,9 @@
+filebeat.prospectors:
+ - paths:
+   - /var/lib/docker/containers/*/*-json.log
+   document_type: syslog
+output:
+ logstash:
+  enabled: true
+  hosts:
+      - logstash:5044
