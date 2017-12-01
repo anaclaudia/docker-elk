@@ -1,7 +1,35 @@
+######################## Filebeat Configuration ############################
+#
+## This file is a full configuration example documenting all non-deprecated
+## options in comments. For a shorter configuration example, that contains only
+## the most common options, please see filebeat.yml in the same directory.
+##
+## You can find the full configuration reference here:
+## https://www.elastic.co/guide/en/beats/filebeat/index.html
+#
+#
+##==========================  Modules configuration ============================
+filebeat.modules:
+#
+##------------------------------- System Module -------------------------------
+- module: system
+    syslog:
+      enabled: true
+
+#=========================== Filebeat prospectors =============================
 filebeat.prospectors:
 - type: log
   paths:
     - /var/lib/docker/containers/*/*-json.log
 
+#================================ Processors ===================================
+processors:
+  - add_docker_metadata: ~
+
+#----------------------------- Logstash output ---------------------------------
 output.logstash:
-  hosts: ["logstsh:5044"]
+  enabled: true
+  hosts: ["logstash:5044"]
+  worker: 1
+  compression_level: 3
+  index: 'filebeat'
