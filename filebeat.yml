@@ -6,15 +6,14 @@
 ##
 ## You can find the full configuration reference here:
 ## https://www.elastic.co/guide/en/beats/filebeat/index.html
-#
-#
+
 ##==========================  Modules configuration ============================
 filebeat.modules:
-#
+
 ##------------------------------- System Module -------------------------------
 - module: system
-    syslog:
-      enabled: true
+  syslog:
+    enabled: true
 
 #=========================== Filebeat prospectors =============================
 filebeat.prospectors:
