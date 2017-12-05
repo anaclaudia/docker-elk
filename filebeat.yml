@@ -14,16 +14,24 @@ filebeat.modules:
 - module: system
   syslog:
     enabled: true
-
+    access:
+      var.paths: ["/var/lib/docker/containers/*/*.log"]
 #=========================== Filebeat prospectors =============================
 filebeat.prospectors:
 - type: log
   paths:
-    - /var/lib/docker/containers/*/*-json.log
+    - /var/lib/docker/containers/*/*.log
 
 #================================ Processors ===================================
 processors:
   - add_docker_metadata: ~
+
+#============================== Kibana =====================================
+#
+## Starting with Beats version 6.0.0, the dashboards are loaded via the Kibana API.
+## This requires a Kibana endpoint configuration.
+setup.kibana:
+  host: "kibana:5601"
 
 #----------------------------- Logstash output ---------------------------------
 output.logstash:
